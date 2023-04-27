@@ -1,0 +1,228 @@
+/* Propriétés personnalisées
+============================================================================= */
+:root {
+    --couleur-conteneur-disques: rgb(148, 209, 250);
+    --couleur-bouton-disques: rgb(0, 75, 126);
+
+    --couleur-conteneur-etoiles: rgb(148, 250, 153);
+    --couleur-bouton-etoiles: rgb(0, 136, 7);
+}
+
+/* Normalisation supplémentaire 
+============================================================================= */
+/* Notez l'utilisation des sélecteurs additionnels pour les pseudo-éléments */
+*, ::before, ::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Animations utilisées dans le contenu principal (éléments dynamiques 'disque' 
+et 'étoile' plus bas)
+============================================================================= */
+
+@keyframes bouger-forme-verticalement {
+    from {
+        top: 0;
+    }
+    to {
+        top: calc(100% - 2.5rem);
+    }
+}
+
+@keyframes bouger-forme-horizontalement {
+    from {
+        left: 0;
+    }
+    to {
+        left: calc(100% - 2.5rem);
+    }
+}
+
+/* Mise en page de base
+============================================================================= */
+html {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    scroll-behavior: smooth;
+    font-family: 'Asap', sans-serif;
+    /* Ajustement de la taille des polices à la racine du document */
+    font-size: clamp(16px, 0.5rem + 0.5vw, 24px);
+}
+
+body {
+    max-width: 100%;
+    height: 100%;
+    min-height: 500px;
+    color: #072706;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    position: relative;
+    text-align: center;
+    padding: 0.5rem;
+    /* Notez les bordures multiples utilisant la propriété box-shadow */
+    box-shadow: 0 0.3rem 0 0 var(--couleur-bouton-disques),
+                0 0.6rem 0 0 var(--couleur-bouton-etoiles),
+                0 0.9rem 0 0 var(--couleur-bouton-disques);
+    transition: box-shadow 1s;
+}
+
+/* Contenu principal
+============================================================================= */
+/* Les sections du contenu principal */
+main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+main > div {
+    border: 1px solid rgba(0,0,0,0.1);
+    flex: 1 1 auto;
+    margin: 1rem;
+    position: relative;
+}
+
+#conteneur-disques {
+    background-color: var(--couleur-conteneur-disques);
+    box-shadow: 2px 2px 10px 1px rgba(200,200,200,0.7);
+}
+
+#conteneur-etoiles {
+    background-color: var(--couleur-conteneur-etoiles);
+    box-shadow: 2px 2px 10px 1px rgba(200,200,200,0.7);
+}
+
+.disque {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: azure;
+    border: 1px solid #dad9d7;
+    cursor: crosshair;
+    animation: 
+                bouger-forme-verticalement 3s ease-out infinite alternate, 
+                bouger-forme-horizontalement 7s 0.5s ease-out infinite alternate;
+}
+
+.etoile {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    background-color: azure;
+    cursor: crosshair;
+    animation: 
+                bouger-forme-verticalement 2s ease-out infinite alternate, 
+                bouger-forme-horizontalement 10s 1s ease-out infinite alternate;
+}
+
+.etoile::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 2rem;
+    height: 2rem;
+    background-color: azure;
+    transform: rotate(-45deg);
+}
+
+.disque:hover,
+.etoile:hover {
+    animation-play-state: paused;
+}
+
+.disque:hover::after,
+.etoile:hover::after {
+    content: "";
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    border-radius: 50%;
+    top: -25%;
+    left: -25%;
+    background-color: transparent;
+    box-shadow: 0 0 20px 10px #a01c10;
+}
+
+/* Pied de page : barre de contrôle (boutons de création des formes)
+============================================================================= */
+footer {
+    display: flex;
+    justify-content: center;
+    column-gap: 1rem;
+}
+
+.btn {
+    position: relative;
+    padding: 1rem 2rem;
+    margin: 1rem 1rem 2rem 1rem;
+    cursor: pointer;
+    border-radius: 30px;
+    font-weight: bold;
+    overflow: hidden;
+    user-select: none;
+}
+
+.btn:hover {
+    color: #fff;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.25s;
+}
+
+.btn:hover::before {
+    transform: translateX(0);
+}
+
+.btn-lancer-disque {
+    box-shadow: 2px 2px 10px 1px var(--couleur-bouton-disques);
+    color: rgb(0, 25, 47);
+}
+
+.btn-lancer-disque::before {
+    background-color: var(--couleur-bouton-disques);
+}
+
+.btn-lancer-etoile {
+    box-shadow: 2px 2px 10px 1px var(--couleur-bouton-etoiles);
+    color: rgb(0, 37, 2);
+}
+
+.btn-lancer-etoile::before {
+    background-color: var(--couleur-bouton-etoiles);
+}
+
+/* Requête média pour écrans plus grands (768px et +)
+============================================================================= */
+@media screen and (min-width:768px) {
+    main {
+        flex-direction: row;
+    }
+}
